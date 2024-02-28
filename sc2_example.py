@@ -20,7 +20,7 @@ config = transformers.AutoConfig.from_pretrained(model_path)
 # disable mistral's default SWA mechanism (4096), mistral's true window is 8192.
 config.sliding_window = 200000000
 model = AutoModelForCausalLM.from_pretrained(
-    model_path, config=config, device_map="auto")
+    model_path, config=config).to("cuda")
 
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -31,7 +31,7 @@ for line in open("passkey_examples_10k.jsonl", "r"):
     example = json.loads(line)
     prompt_postfix = "What is the pass key? The pass key is "
     prompt = example["input"] + prompt_postfix
-    input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+    input_ids = tokenizer(prompt, return_tensors="pt").to(model.device).input_ids
     print("-----------------------------------")
     print(f"#Tokens of Prompt:", input_ids.shape[1], end=" ")
     print("Passkey target:", example["target"])
