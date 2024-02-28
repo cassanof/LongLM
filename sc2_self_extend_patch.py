@@ -5,7 +5,6 @@ import math
 from typing import Optional, Tuple
 import torch.nn.functional as F
 from transformers.cache_utils import Cache
-import warnings
 
 
 def repeat_kv(hidden_states: torch.Tensor, n_rep: int) -> torch.Tensor:
